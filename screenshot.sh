@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DATEFLAG=$(date '+%Y-%m-%d-%H%M%S')
-
-mkdir data/$DATEFLAG
+DIRECTORY="data/$DATEFLAG"
+mkdir $DIRECTORY 
 
 TESTURL=$(./testurl.py $1)
 
@@ -12,12 +12,12 @@ then
 	docker run \
 	    --rm \
 	    -it \
-	    -v ~/Projects/eyewitness/data/$DATEFLAG:/tmp/EyeWitness \
+	    -v $(pwd)/$DIRECTORY:/tmp/EyeWitness \
 	    eyewitness \
 	    --web \
 	    --single $1
 
-	firefox data/$DATEFLAG/results/report.html
+	firefox "$DIRECTORY/results/report.html"
 else
 	echo "Testurl failed"
 fi

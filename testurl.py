@@ -17,29 +17,34 @@ except ImportError:
 
 DEBUG = 0
 
-url = sys.argv[1]
+def main():
+    """ main loop """
+    url = sys.argv[1]
 
-# is it even a valid url?
-urldetails = urlparse(url)
-domain = urldetails.netloc
-if not domain:
-    if DEBUG:
-        print("Couldn't parse '{}'".format(url))
-    sys.exit(0)
-
-# test it resolves
-try:
-    socket.gethostbyname(domain)
-except socket.gaierror:
-    if DEBUG:
-        print("Couldn't resolve '{}'".format(domain))
-    sys.exit(0)
-# try to grab it
-try:
-    req = requests.get(url)
-    if req.status_code == 500:
+    # is it even a valid url?
+    urldetails = urlparse(url)
+    domain = urldetails.netloc
+    if not domain:
         if DEBUG:
-            print("got a 500")
-except:
-    sys.exit(0)
-sys.exit(1)
+            print("Couldn't parse '{}'".format(url))
+        return 0
+
+    # test it resolves
+    try:
+        socket.gethostbyname(domain)
+    except socket.gaierror:
+        if DEBUG:
+            print("Couldn't resolve '{}'".format(domain))
+        return 0
+    # try to grab it
+    try:
+        req = requests.get(url)
+        if req.status_code == 500:
+            if DEBUG:
+                print("got a 500")
+    except:
+        return 0
+    return 1
+
+if __name__ == '__main__':
+    print(main())
